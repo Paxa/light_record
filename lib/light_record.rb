@@ -13,6 +13,7 @@ module LightRecord
       def initialize(data)
         @data = data
         @attributes = @data
+        @readonly = true
       end
 
       def read_attribute_before_type_cast(attr_name)
@@ -38,6 +39,12 @@ module LightRecord
       def attributes
         @attributes
       end
+
+      # to avoid errors when try saving data
+      def remember_transaction_record_state
+        @_start_transaction_state ||= {}
+        super
+      end
     end
 
     if klass.const_defined?(:LightRecord, false)
@@ -58,6 +65,18 @@ module LightRecord
         @fields << field
         define_method(field) do
           @data[field]
+        end
+
+        # to avoid errors when try saving data
+        define_method("#{field}=") do |value|
+          @data[field] = value
+        end
+      end
+
+      # ActiveRecord make method :id refers to primary key, even there is no column "id"
+      if !fields.include?(:id) && !fields.include?("id") && primary_key.present?
+        define_method(:id) do
+          @data[self.class.primary_key.to_sym]
         end
       end
     end
@@ -88,7 +107,7 @@ module LightRecord
       sql = self.to_sql
 
       result = nil
-      event_payload = {sql: sql, name: "LightRecord", connection_id: 70155326950080, statement_name: nil, binds: []}
+      event_payload = {sql: sql, name: "LightRecord", connection_id: connection.object_id, statement_name: nil, binds: []}
       ActiveSupport::Notifications.instrument('sql.active_record', event_payload) do
         result = client.query(sql, stream: false, symbolize_keys: true, cache_rows: false, as: :hash)
       end
@@ -111,13 +130,14 @@ module LightRecord
     # this uses less memroy because it creates objects one-by-one
     # it uses stream feature of mysql client
     def light_records_each(options = {})
-      ActiveRecord::Base.connection_pool.with_connection do
-        client = connection.instance_variable_get(:@connection)
+      #ActiveRecord::Base.connection_pool.with_connection do
+        conn = ActiveRecord::Base.connection_pool.checkout
+        client = conn.instance_variable_get(:@connection)
         sql = self.to_sql
 
         result = nil
 
-        event_payload = {sql: sql, name: "LightRecord", connection_id: 70155326950080, statement_name: nil, binds: []}
+        event_payload = {sql: sql, name: "LightRecord", connection_id: conn.object_id, statement_name: nil, binds: []}
         ActiveSupport::Notifications.instrument('sql.active_record', event_payload) do
           result = client.query(sql, stream: true, symbolize_keys: true, cache_rows: false, as: :hash)
         end
@@ -131,12 +151,10 @@ module LightRecord
         result.each do |row|
           yield klass.new(row)
         end
-      end
+      #end
+    ensure
+      ActiveRecord::Base.connection_pool.checkin(conn)
     end
-
-    #def light_record_first
-    #  limit(1).light_records.first
-    #end
   end
 
 end
