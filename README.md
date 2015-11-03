@@ -18,7 +18,7 @@ Idea is to skip all magic related to attributes and object initialization. This 
 Simply it become something like this:
 
 ```ruby
-class User_light_record > User
+class User_light_record < User
   def initialize(attributes)
     @attributes = attributes
   end
