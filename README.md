@@ -3,7 +3,27 @@ LightRecord
 
 ActiveRecord extension to kick the speed of allocating ActiveRecord object
 
-It provides minimalistic wrapper of ActiveRecord to select big data.
+### How it works
+
+It provides functionality to load ActiveRecord records with patched attribute related methods.
+This make AR objects as read-only but it makes up to 5 times less object allocations.
+
+Each time when you retrieve objects via `.light_records` it will create annonymous class to work with given set of attributes.
+
+```
+  LightRecord Extension Class
+              ↓
+        Your AR Model
+              ↓
+      ActiveRecord::Base
+```
+
+
+### Installation
+
+```ruby
+gem 'light_record', github: 'paxa/light_record'
+```
 
 #### `scope.light_records`
 
@@ -18,9 +38,9 @@ Idea is to skip all magic related to attributes and object initialization. This 
 Simply it become something like this:
 
 ```ruby
-class User_light_record > User
+class User_light_record < User
   def initialize(attributes)
-    @attributes = attributes
+    @attributes = attributes # hash of data "as is" from database library
   end
 
   def email
@@ -28,6 +48,8 @@ class User_light_record > User
   end
 end
 ```
+
+
 #### `scope.light_records_each`
 
 
@@ -52,6 +74,8 @@ but I try to use in some project and it gives 3-5 times improvement, and 2-3 tim
 
 Sometimes this can break functionality because it will override attribute methods and disable some of features in activerecord.
 
+There is mechanism to override attribute methods created by LightRecord:
+
 ```ruby
 class User < ActiveRecord::Base
   # this module will be included in extending class when we use light_records and light_records_each
@@ -63,3 +87,5 @@ end
 ```
 
 Note: when you use LightRecord instances it will break type casting
+
+This gem only tested with mysql2 gem
