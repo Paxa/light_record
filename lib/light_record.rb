@@ -109,7 +109,11 @@ module LightRecord
       result = nil
       event_payload = {sql: sql, name: "LightRecord", connection_id: connection.object_id, statement_name: nil, binds: []}
       ActiveSupport::Notifications.instrument('sql.active_record', event_payload) do
-        result = client.query(sql, stream: false, symbolize_keys: true, cache_rows: false, as: :hash)
+        options = {
+          stream: false, symbolize_keys: true, cache_rows: false, as: :hash,
+          database_timezone: ActiveRecord::Base.default_timezone
+        }
+        result = client.query(sql, options)
       end
 
       klass = LightRecord.build_for_class(self.klass, result.fields)
@@ -139,7 +143,11 @@ module LightRecord
 
         event_payload = {sql: sql, name: "LightRecord", connection_id: conn.object_id, statement_name: nil, binds: []}
         ActiveSupport::Notifications.instrument('sql.active_record', event_payload) do
-          result = client.query(sql, stream: true, symbolize_keys: true, cache_rows: false, as: :hash)
+          options = {
+            stream: true, symbolize_keys: true, cache_rows: false, as: :hash,
+            database_timezone: ActiveRecord::Base.default_timezone
+          }
+          result = client.query(sql, options)
         end
 
         klass = LightRecord.build_for_class(self.klass, result.fields)

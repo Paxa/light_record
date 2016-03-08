@@ -12,6 +12,8 @@ require 'looksee'
 
 Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new
 
+# To run tests you should have DB 'light_record' and table 'sample' from file FL_insurance_sample.csv
+
 class ARQuestion < ActiveRecord::Base
   self.table_name =  "sample"
   self.primary_key = "policyID"
@@ -110,5 +112,18 @@ describe "LightRecord" do
   it "should be not as a new record" do
     record = ARQuestion_wLR.limit(1).light_records.first
     refute(record.new_record?)
+  end
+
+  it "should select datetime in UTC" do
+    # Active Record will set :database_timezone on first query
+    # But if no query run on that connection then it will be blank
+    # This code is simulating that behaviour
+    ActiveRecord::Base.connection_pool.connections.each do |conn|
+      client = ActiveRecord::Base.connection.instance_variable_get(:@connection)
+      client.query_options.delete(:database_timezone)
+    end
+
+    record = ARQuestion_wLR.select("now() as time").light_records.first
+    assert(record.time.gmt?, "Time is not UTC")
   end
 end

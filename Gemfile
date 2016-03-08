@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'activerecord', '4.1.13'
-gem 'mysql2', '0.3.17'
+gem 'activerecord', '4.2.6'
+gem 'mysql2', '0.4.3'
 
 gem 'benchmark-ips'
 #gem 'stackprof'
