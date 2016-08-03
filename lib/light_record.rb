@@ -32,6 +32,10 @@ module LightRecord
         @attributes[attr_name.to_sym]
       end
 
+      def _read_attribute(attr_name)
+        @attributes.fetch(attr_name.to_sym) { |n| yield n if block_given? }
+      end
+
       def [](attr_name)
         @attributes[attr_name.to_sym]
       end
