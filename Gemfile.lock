@@ -12,30 +12,28 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (4.2.6)
-      activesupport (= 4.2.6)
-      builder (~> 3.1)
-    activerecord (4.2.6)
-      activemodel (= 4.2.6)
-      activesupport (= 4.2.6)
-      arel (~> 6.0)
-    activesupport (4.2.6)
+    activemodel (5.0.0.1)
+      activesupport (= 5.0.0.1)
+    activerecord (5.0.0.1)
+      activemodel (= 5.0.0.1)
+      activesupport (= 5.0.0.1)
+      arel (~> 7.0)
+    activesupport (5.0.0.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
-      json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
-      thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     ansi (1.5.0)
-    arel (6.0.3)
+    arel (7.1.1)
     benchmark-ips (2.5.0)
     builder (3.2.2)
+    concurrent-ruby (1.0.2)
     fast_stack (0.1.0)
       rake
       rake-compiler
     flamegraph (0.1.0)
       fast_stack
     i18n (0.7.0)
-    json (1.8.3)
     looksee (3.1.0)
     memory_profiler (0.9.6)
     minitest (5.8.4)
@@ -44,7 +42,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
-    mysql2 (0.4.3)
+    mysql2 (0.4.4)
     rake (10.5.0)
     rake-compiler (0.9.6)
       rake
@@ -57,15 +55,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (= 4.2.6)
+  activerecord (>= 5.0)
   benchmark-ips
   flamegraph
   light_record!
   looksee
   memory_profiler
   minitest-reporters
-  mysql2 (= 0.4.3)
+  mysql2 (= 0.4.4)
   process_memory!
 
 BUNDLED WITH
-   1.11.2
+   1.12.5

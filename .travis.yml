@@ -1,0 +1,11 @@
+services:
+  - mysql
+
+script: "bundle exec rspec"
+rvm:
+  - 2.2.5
+  - 2.3.1
+
+
+before_script:
+  - mysql -u root -e 'create database IF NOT EXISTS light_record;'

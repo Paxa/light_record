@@ -1,16 +1,5 @@
-require 'bundler/setup'
-
-#$:.unshift File.expand_path('../lib', File.dirname(__FILE__))
-
-require "minitest/autorun"
-
-require "mysql2"
-require "active_record"
-require 'light_record'
-require "minitest/reporters"
-require 'looksee'
-
-Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new
+require_relative './test_helper'
+require_relative './prepare_db'
 
 # To run tests you should have DB 'light_record' and table 'sample' from file FL_insurance_sample.csv
 
@@ -29,15 +18,6 @@ class ARQuestion_wLR < ActiveRecord::Base
     end
   end
 end
-
-ActiveRecord::Base.establish_connection(
-  adapter: 'mysql2',
-  database: 'light_record',
-  host: 'localhost',
-  username: 'root',
-  password: '',
-  pool: 5
-)
 
 describe "LightRecord" do
 
