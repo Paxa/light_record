@@ -1,7 +1,7 @@
 services:
   - mysql
 
-script: "bundle exec rspec"
+script: "bundle exec rake test"
 rvm:
   - 2.2.5
   - 2.3.1

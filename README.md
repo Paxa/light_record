@@ -1,6 +1,8 @@
 LightRecord
 ===========
 
+[![Build Status](https://travis-ci.org/Paxa/light_record.svg?branch=master)](https://travis-ci.org/Paxa/light_record)
+
 ActiveRecord extension to kick the speed of allocating ActiveRecord object
 
 ### How it works
