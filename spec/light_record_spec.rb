@@ -1,16 +1,16 @@
 require_relative './test_helper'
 require_relative './prepare_db'
 
-# To run tests you should have DB 'light_record' and table 'sample' from file FL_insurance_sample.csv
+#ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 class ARQuestion < ActiveRecord::Base
   self.table_name =  "sample"
-  self.primary_key = "policyID"
+  self.primary_key = "policy_id"
 end
 
 class ARQuestion_wLR < ActiveRecord::Base
   self.table_name =  "sample"
-  self.primary_key = "policyID"
+  self.primary_key = "policy_id"
 
   module LightRecord
     def light_included?
@@ -63,7 +63,8 @@ describe "LightRecord" do
   end
 
   it "should work with #respond_to?" do
-    light = ARQuestion.select("*, rand() as extra_column_from_sql").limit(1).light_records.first
+    rand_sql_fn = ENV['DB'] == 'postgres' ? "random" : "rand"
+    light = ARQuestion.select("*, #{rand_sql_fn}() as extra_column_from_sql").limit(1).light_records.first
 
     assert_respond_to(light, :extra_column_from_sql)
     ARQuestion.column_names.each do |column_name|
@@ -94,16 +95,23 @@ describe "LightRecord" do
     refute(record.new_record?)
   end
 
-  it "should select datetime in UTC" do
-    # Active Record will set :database_timezone on first query
-    # But if no query run on that connection then it will be blank
-    # This code is simulating that behaviour
-    ActiveRecord::Base.connection_pool.connections.each do |conn|
-      client = ActiveRecord::Base.connection.instance_variable_get(:@connection)
-      client.query_options.delete(:database_timezone)
-    end
+  it "should add extra params in query" do
+    record = ARQuestion_wLR.where(policy_id: 119736).light_records.first
+    assert_equal(record.id, 119736)
+  end
 
-    record = ARQuestion_wLR.select("now() as time").light_records.first
-    assert(record.time.gmt?, "Time is not UTC")
+  if ActiveRecord::Base.connection.is_a?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+    it "should select datetime in UTC" do
+      # Active Record will set :database_timezone on first query
+      # But if no query run on that connection then it will be blank
+      # This code is simulating that behaviour
+      ActiveRecord::Base.connection_pool.connections.each do |conn|
+        client = ActiveRecord::Base.connection.instance_variable_get(:@connection)
+        client.query_options.delete(:database_timezone)
+      end
+
+      record = ARQuestion_wLR.select("now() as time").light_records.first
+      assert(record.time.gmt?, "Time is not UTC")
+    end
   end
 end

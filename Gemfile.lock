@@ -39,6 +39,7 @@ GEM
       minitest (>= 5.0)
       ruby-progressbar
     mysql2 (0.4.4)
+    pg (0.18.4)
     ruby-progressbar (1.8.1)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
@@ -56,6 +57,7 @@ DEPENDENCIES
   memory_profiler
   minitest-reporters
   mysql2 (= 0.4.4)
+  pg
   process_memory!
 
 BUNDLED WITH

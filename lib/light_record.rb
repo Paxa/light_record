@@ -1,6 +1,13 @@
 module LightRecord
   extend self
 
+  # Create LightRecord class based on klass argument
+  # Used internally by scope#light_records and scope#light_records_each
+  #
+  # @param klass [Class] ActiveRecord model
+  # @param fields [Array] list of fields, will be used to define attribute methods
+  # @return new class base on klass argument but extended with LightRecord methods
+  #
   def build_for_class(klass, fields)
     new_klass = Class.new(klass) do
       self.table_name = klass.table_name
@@ -60,6 +67,9 @@ module LightRecord
     new_klass
   end
 
+  # ActiveRecord extension for class methods
+  # Defines klass.define_fields
+  # Overrides klass.column_names and klass.define_attribute_methods
   module RecordAttributes
     def define_fields(fields)
       @fields ||= []
@@ -89,11 +99,13 @@ module LightRecord
     def define_attribute_methods
     end
 
+    # Active record keep it as strings, but I keep it as symbols
     def column_names
       @fields.map(&:to_s)
     end
   end
 
+  # Create LightRecord class based on klass argument
   def base_extended(klass)
     @base_extended ||= {}
     if @base_extended[klass]
@@ -105,20 +117,16 @@ module LightRecord
 
   module RelationMethods
 
-    # Return array of light object
+    # Executes query and return array of light object (model class extended by LightRecord)
     def light_records(options = {})
       client = connection.instance_variable_get(:@connection)
       sql = self.to_sql
 
-      result = nil
-      event_payload = {sql: sql, name: "LightRecord", connection_id: connection.object_id, statement_name: nil, binds: []}
-      ActiveSupport::Notifications.instrument('sql.active_record', event_payload) do
-        options = {
-          stream: false, symbolize_keys: true, cache_rows: false, as: :hash,
-          database_timezone: ActiveRecord::Base.default_timezone
-        }
-        result = client.query(sql, options)
-      end
+      options = {
+        stream: false, symbolize_keys: true, cache_rows: false, as: :hash,
+        database_timezone: ActiveRecord::Base.default_timezone
+      }
+      result = _light_record_execute_query(connection, sql, options)
 
       klass = LightRecord.build_for_class(self.klass, result.fields)
 
@@ -126,47 +134,58 @@ module LightRecord
         self.klass.const_set(:"LR_#{Time.now.to_i}", klass)
       end
 
+      need_symbolize_keys = defined?(PG::Result) && result.is_a?(PG::Result)
+
       records = []
       result.each do |row|
+        row.symbolize_keys! if need_symbolize_keys
         records << klass.new(row)
       end
 
       return records
     end
 
-    # Iterate for each object
+    # Same as `#light_records` but iterates through result set and call block for each object
     # this uses less memroy because it creates objects one-by-one
     # it uses stream feature of mysql client
     def light_records_each(options = {})
-      #ActiveRecord::Base.connection_pool.with_connection do
-        conn = ActiveRecord::Base.connection_pool.checkout
-        client = conn.instance_variable_get(:@connection)
-        sql = self.to_sql
+      conn = ActiveRecord::Base.connection_pool.checkout
+      sql = self.to_sql
 
-        result = nil
+      options = {
+        stream: true, symbolize_keys: true, cache_rows: false, as: :hash,
+        database_timezone: ActiveRecord::Base.default_timezone
+      }
+      result = _light_record_execute_query(conn, sql, options)
 
-        event_payload = {sql: sql, name: "LightRecord", connection_id: conn.object_id, statement_name: nil, binds: []}
-        ActiveSupport::Notifications.instrument('sql.active_record', event_payload) do
-          options = {
-            stream: true, symbolize_keys: true, cache_rows: false, as: :hash,
-            database_timezone: ActiveRecord::Base.default_timezone
-          }
-          result = client.query(sql, options)
-        end
+      klass = LightRecord.build_for_class(self.klass, result.fields)
 
-        klass = LightRecord.build_for_class(self.klass, result.fields)
+      if options[:set_const]
+        self.klass.const_set(:"LR_#{Time.now.to_i}", klass)
+      end
 
-        if options[:set_const]
-          self.klass.const_set(:"LR_#{Time.now.to_i}", klass)
-        end
+      need_symbolize_keys = defined?(PG::Result) && result.is_a?(PG::Result)
 
-        result.each do |row|
-          yield klass.new(row)
-        end
-      #end
+      result.each do |row|
+        row.symbolize_keys! if need_symbolize_keys
+        yield klass.new(row)
+      end
     ensure
       ActiveRecord::Base.connection_pool.checkin(conn)
     end
+
+    private def _light_record_execute_query(connection, sql, options)
+      client = connection.instance_variable_get(:@connection)
+
+      if client.class.to_s == 'PG::Connection'
+        connection.execute(sql, "LightRecord - #{self.klass}")
+      else
+        connection.send(:log, sql, "LightRecord - #{self.klass}") do
+          client.query(sql, options)
+        end
+      end
+    end
+
   end
 
 end

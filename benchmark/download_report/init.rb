@@ -8,7 +8,7 @@ require_relative '../../lib/light_record'
 
 class Question < ActiveRecord::Base
   self.table_name =  "sample"
-  self.primary_key = "policyID"
+  self.primary_key = "policy_id"
 end
 
 begin

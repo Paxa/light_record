@@ -1,11 +1,17 @@
 services:
   - mysql
+  - postgresql
 
 script: "rake test"
+
 rvm:
   - 2.2.5
   - 2.3.1
 
+env:
+  - DB=postgres DB_USER=postgres
+  - DB=mysql
 
 before_script:
   - mysql -u root -e 'create database IF NOT EXISTS light_record;'
+  - psql -c 'create database light_record;' -U postgres

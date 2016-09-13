@@ -21,7 +21,7 @@ ActiveRecord::Base.establish_connection(
 
 class ARSample < ActiveRecord::Base
   self.table_name =  "sample"
-  self.primary_key = "policyID"
+  self.primary_key = "policy_id"
 end
 
 scope = ARSample.limit(50000)
