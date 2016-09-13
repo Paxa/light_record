@@ -3,11 +3,11 @@
 
 Gem::Specification.new do |gem|
   gem.name = 'light_record'
-  gem.version = "0.1"
+  gem.version = "0.2"
   gem.authors = ["Pavel Evstigneev"]
   gem.email = ["pavel.evst@gmail.com"]
   gem.license = 'MIT'
-  gem.date = '2015-10-03'
+  gem.date = '2016-09-13'
   gem.summary = "Getting process memory"
   gem.homepage = 'http://github.com/paxa/light_record'
 

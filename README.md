@@ -95,4 +95,4 @@ end
 
 Note: when you use LightRecord instances it will break type casting
 
-This gem only tested with mysql2 gem
+This gem supports MySQL and PostgreSQL
