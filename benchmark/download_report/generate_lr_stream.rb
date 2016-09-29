@@ -1,4 +1,4 @@
-require_relative './init'
+require_relative '../init'
 
 measure_memory do
   count = 0

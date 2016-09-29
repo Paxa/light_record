@@ -2,9 +2,12 @@ require 'bundler/setup'
 
 require 'csv'
 require "process_memory"
+require "sequel"
 
-require_relative '../../spec/prepare_db'
-require_relative '../../lib/light_record'
+require_relative '../spec/prepare_db'
+require_relative '../lib/light_record'
+
+DB = Sequel.mysql2("light_record", username: 'root')
 
 class Question < ActiveRecord::Base
   self.table_name =  "sample"
