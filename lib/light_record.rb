@@ -18,13 +18,12 @@ module LightRecord
       define_fields(fields)
 
       def initialize(data)
-        @data = data
-        @attributes = @data
+        @attributes = data
         @readonly = true
       end
 
       def read_attribute_before_type_cast(attr_name)
-        @data[attr_name.to_sym]
+        @attributes[attr_name.to_sym]
       end
 
       def self.subclass_from_attributes?(attrs)
@@ -78,19 +77,19 @@ module LightRecord
         field = field.to_sym unless field.is_a?(Symbol)
         @fields << field
         define_method(field) do
-          @data[field]
+          @attributes[field]
         end
 
         # to avoid errors when try saving data
         define_method("#{field}=") do |value|
-          @data[field] = value
+          @attributes[field] = value
         end
       end
 
       # ActiveRecord make method :id refers to primary key, even there is no column "id"
       if !fields.include?(:id) && !fields.include?("id") && primary_key.present?
         define_method(:id) do
-          @data[self.class.primary_key.to_sym]
+          @attributes[self.class.primary_key.to_sym]
         end
       end
     end
