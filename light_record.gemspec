@@ -3,12 +3,12 @@
 
 Gem::Specification.new do |gem|
   gem.name = 'light_record'
-  gem.version = "0.2"
+  gem.version = "0.3"
   gem.authors = ["Pavel Evstigneev"]
   gem.email = ["pavel.evst@gmail.com"]
   gem.license = 'MIT'
   gem.date = '2016-09-13'
-  gem.summary = "Getting process memory"
+  gem.summary = "ActiveRecord extension to speedup ActiveRecord object allocation"
   gem.homepage = 'http://github.com/paxa/light_record'
 
   #gem.extra_rdoc_files = ['CHANGELOG', 'LICENSE', 'README.markdown']
