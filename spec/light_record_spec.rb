@@ -1,5 +1,5 @@
-require_relative './test_helper'
-require_relative './prepare_db'
+require_relative 'test_helper'
+require_relative 'prepare_db'
 
 #ActiveRecord::Base.logger = Logger.new(STDOUT)
 
@@ -15,6 +15,14 @@ class ARQuestion_wLR < ActiveRecord::Base
   module LightRecord
     def light_included?
       true
+    end
+    def self.included(base)
+      base.extend(ClassMethods)
+    end
+    module ClassMethods
+      def im_a_class_method
+        :pam_param_pam_pam
+      end
     end
   end
 end
@@ -60,6 +68,7 @@ describe "LightRecord" do
 
     klass = LightRecord.base_extended(ARQuestion_wLR)
     assert_includes(klass.ancestors, ARQuestion_wLR::LightRecord)
+    assert_equal(:pam_param_pam_pam, klass.im_a_class_method)
   end
 
   it "should work with #respond_to?" do
@@ -113,5 +122,10 @@ describe "LightRecord" do
       record = ARQuestion_wLR.select("now() as time").light_records.first
       assert(record.time.gmt?, "Time is not UTC")
     end
+  end
+
+  it "should return #model_name of original class" do
+    record = ARQuestion.where(policy_id: 119736).light_records.first
+    assert_equal(ARQuestion.model_name, record.class.model_name)
   end
 end

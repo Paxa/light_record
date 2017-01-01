@@ -22,6 +22,10 @@ module LightRecord
         @readonly = true
       end
 
+      def self.model_name
+        self.superclass.model_name
+      end
+
       def read_attribute_before_type_cast(attr_name)
         @attributes[attr_name.to_sym]
       end

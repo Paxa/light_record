@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'activerecord', '>= 5.0'
-gem 'mysql2', '0.4.4'
+gem 'mysql2', '~> 0.4'
 gem 'pg'
 
 gem 'benchmark-ips'

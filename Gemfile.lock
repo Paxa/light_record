@@ -7,41 +7,41 @@ GIT
 PATH
   remote: .
   specs:
-    light_record (0.2)
+    light_record (0.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (5.0.0.1)
-      activesupport (= 5.0.0.1)
-    activerecord (5.0.0.1)
-      activemodel (= 5.0.0.1)
-      activesupport (= 5.0.0.1)
+    activemodel (5.0.1)
+      activesupport (= 5.0.1)
+    activerecord (5.0.1)
+      activemodel (= 5.0.1)
+      activesupport (= 5.0.1)
       arel (~> 7.0)
-    activesupport (5.0.0.1)
+    activesupport (5.0.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     ansi (1.5.0)
-    arel (7.1.1)
+    arel (7.1.4)
     benchmark-ips (2.7.2)
     builder (3.2.2)
-    concurrent-ruby (1.0.2)
+    concurrent-ruby (1.0.4)
     flamegraph (0.9.5)
     i18n (0.7.0)
     looksee (4.0.0)
-    memory_profiler (0.9.6)
-    minitest (5.9.0)
-    minitest-reporters (1.1.11)
+    memory_profiler (0.9.7)
+    minitest (5.10.1)
+    minitest-reporters (1.1.13)
       ansi
       builder
       minitest (>= 5.0)
       ruby-progressbar
-    mysql2 (0.4.4)
-    pg (0.18.4)
+    mysql2 (0.4.5)
+    pg (0.19.0)
     ruby-progressbar (1.8.1)
-    sequel (4.38.0)
+    sequel (4.41.0)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -57,10 +57,10 @@ DEPENDENCIES
   looksee
   memory_profiler
   minitest-reporters
-  mysql2 (= 0.4.4)
+  mysql2 (~> 0.4)
   pg
   process_memory!
   sequel
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
