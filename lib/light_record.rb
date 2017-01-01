@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LightRecord
   extend self
 
@@ -56,8 +58,18 @@ module LightRecord
 
       # to avoid errors when try saving data
       def remember_transaction_record_state
+        @new_record ||= false
+        @destroyed ||= false
         @_start_transaction_state ||= {}
         super
+      end
+
+      def sync_with_transaction_state
+        nil
+      end
+
+      def new_record?
+        false
       end
     end
 
@@ -122,7 +134,6 @@ module LightRecord
 
     # Executes query and return array of light object (model class extended by LightRecord)
     def light_records(options = {})
-      client = connection.instance_variable_get(:@connection)
       sql = self.to_sql
 
       options = {
