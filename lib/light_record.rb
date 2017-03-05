@@ -22,6 +22,8 @@ module LightRecord
       def initialize(data)
         @attributes = data
         @readonly = true
+        @association_cache = {}
+        #init_internals
       end
 
       def self.model_name
