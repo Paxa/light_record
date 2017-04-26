@@ -73,6 +73,11 @@ module LightRecord
       def new_record?
         false
       end
+
+      # Assign without type casting, sorry
+      def write_attribute_with_type_cast(attr_name, value, should_type_cast)
+        @attributes[attr_name.to_sym] = value
+      end
     end
 
     if klass.const_defined?(:LightRecord, false)
