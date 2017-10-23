@@ -89,6 +89,20 @@ class User < ActiveRecord::Base
   module LightRecord
     def sometihng
     end
+
+    def success
+      attributes[:success] == 1
+    end
+
+    def success_time
+      return attributes[:success_time] unless attributes[:success_time]
+      @success_time ||= attributes[:success_time].in_time_zone(Time.zone)
+    end
+
+    def success_time=(val)
+      @success_time = nil
+      super(val)
+    end
   end
 end
 ```

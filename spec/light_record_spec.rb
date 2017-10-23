@@ -16,6 +16,11 @@ class ARQuestion_wLR < ActiveRecord::Base
     def light_included?
       true
     end
+
+    def point_granularity
+      "Extended #{super}"
+    end
+
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -62,13 +67,20 @@ describe "LightRecord" do
     assert_equal(light.attributes, dark.attributes.symbolize_keys)
   end
 
-  it "should include LightRecord submodule if present" do
-    record = ARQuestion_wLR.limit(1).light_records.first
-    assert(record.light_included?)
+  describe "LightRecord submodule" do
+    it "should include LightRecord submodule if present" do
+      record = ARQuestion_wLR.limit(1).light_records.first
+      assert(record.light_included?)
 
-    klass = LightRecord.base_extended(ARQuestion_wLR)
-    assert_includes(klass.ancestors, ARQuestion_wLR::LightRecord)
-    assert_equal(:pam_param_pam_pam, klass.im_a_class_method)
+      klass = LightRecord.base_extended(ARQuestion_wLR)
+      assert_includes(klass.ancestors, ARQuestion_wLR::LightRecord)
+      assert_equal(:pam_param_pam_pam, klass.im_a_class_method)
+    end
+
+    it "should override attribute methods" do
+      record = ARQuestion_wLR.limit(1).light_records.first
+      assert_equal(record.point_granularity, "Extended 3")
+    end
   end
 
   it "should work with #respond_to?" do

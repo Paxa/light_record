@@ -53,7 +53,7 @@ module LightRecord
       def [](attr_name)
         @attributes[attr_name.to_sym]
       end
-    
+
       def attributes
         @attributes
       end
@@ -74,16 +74,39 @@ module LightRecord
         false
       end
 
-      # Assign without type casting, sorry
+      # For Rails < 5.1
+      # Assign without type casting, no support for alias, sorry
       def write_attribute_with_type_cast(attr_name, value, should_type_cast)
         @attributes[attr_name.to_sym] = value
+      end
+
+      # For Rails >= 5.1
+      # Assign without type casting, no support for alias, sorry
+      if ActiveRecord.version >= Gem::Version.new("5.1.0")
+        def write_attribute(attr_name, value)
+          attr_name = attr_name.to_sym
+          attr_name = self.class.primary_key if attr_name == :id && self.class.primary_key
+          @attributes[attr_name] = value
+          value
+        end
+
+        def raw_write_attribute(attr_name, value) # :nodoc:
+          @attributes[attr_name.to_sym] = value
+          value
+        end
       end
     end
 
     if klass.const_defined?(:LightRecord, false)
-      new_klass.send(:include, klass::LightRecord)
+      new_klass.send(:prepend, klass::LightRecord)
+      if klass::LightRecord.respond_to?(:included)
+        klass::LightRecord.included(new_klass)
+      end
     elsif klass.superclass.const_defined?(:LightRecord, false)
-      new_klass.send(:include, klass.superclass::LightRecord)
+      new_klass.send(:prepend, klass.superclass::LightRecord)
+      if klass.superclass::LightRecord.respond_to?(:included)
+        klass.superclass::LightRecord.included(new_klass)
+      end
     end
 
     new_klass
