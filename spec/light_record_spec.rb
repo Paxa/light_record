@@ -78,7 +78,7 @@ describe "LightRecord" do
     end
 
     it "should override attribute methods" do
-      record = ARQuestion_wLR.limit(1).light_records.first
+      record = ARQuestion_wLR.order(:policy_id).limit(1).light_records.first
       assert_equal(record.point_granularity, "Extended 3")
     end
   end

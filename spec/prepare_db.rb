@@ -82,7 +82,7 @@ module TestDB
           point_longitude varchar(255) NULL,
           line varchar(255) DEFAULT NULL,
           construction varchar(255) NULL,
-          point_granularity real NULL,
+          point_granularity integer NULL,
           PRIMARY KEY(policy_id)
         );
       })
