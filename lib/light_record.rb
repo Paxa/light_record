@@ -95,6 +95,17 @@ module LightRecord
           value
         end
       end
+
+      ## For Rails 5.2
+      def id_in_database
+        attributes[self.class.primary_key.to_sym]
+      end
+
+      private
+        def write_attribute_without_type_cast(attr_name, value)
+          name = attr_name.to_sym
+          @attributes[name] = value
+        end
     end
 
     if klass.const_defined?(:LightRecord, false)

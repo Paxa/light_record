@@ -12,39 +12,39 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (5.1.4)
-      activesupport (= 5.1.4)
-    activerecord (5.1.4)
-      activemodel (= 5.1.4)
-      activesupport (= 5.1.4)
-      arel (~> 8.0)
-    activesupport (5.1.4)
+    activemodel (5.2.0)
+      activesupport (= 5.2.0)
+    activerecord (5.2.0)
+      activemodel (= 5.2.0)
+      activesupport (= 5.2.0)
+      arel (>= 9.0)
+    activesupport (5.2.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (~> 0.7)
+      i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     ansi (1.5.0)
-    arel (8.0.0)
+    arel (9.0.0)
     benchmark-ips (2.7.2)
     builder (3.2.3)
     concurrent-ruby (1.0.5)
     flamegraph (0.9.5)
-    i18n (0.9.1)
+    i18n (1.0.1)
       concurrent-ruby (~> 1.0)
     looksee (4.0.0)
-    memory_profiler (0.9.8)
-    minitest (5.10.3)
-    minitest-reporters (1.1.18)
+    memory_profiler (0.9.10)
+    minitest (5.11.3)
+    minitest-reporters (1.2.0)
       ansi
       builder
       minitest (>= 5.0)
       ruby-progressbar
-    mysql2 (0.4.9)
-    pg (0.21.0)
+    mysql2 (0.5.1)
+    pg (1.0.0)
     ruby-progressbar (1.9.0)
-    sequel (5.2.0)
+    sequel (5.8.0)
     thread_safe (0.3.6)
-    tzinfo (1.2.4)
+    tzinfo (1.2.5)
       thread_safe (~> 0.1)
 
 PLATFORMS
@@ -64,4 +64,4 @@ DEPENDENCIES
   sequel
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

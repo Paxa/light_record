@@ -28,4 +28,15 @@ describe "LightRecord attributes" do
     assert_equal(record[:statecode], "AAA")
   end
 
+  it "should allow updating attributes" do
+    record = ARQuestion.limit(10).light_records.first
+    ARQuestion.transaction do
+      record.update_columns(statecode: "AAA")
+      assert_equal(record.statecode, "AAA")
+      raise ActiveRecord::Rollback
+    end
+    # TODO
+    # assert_equal(record.statecode, "FL")
+  end
+
 end
