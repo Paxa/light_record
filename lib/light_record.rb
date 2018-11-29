@@ -180,8 +180,9 @@ module LightRecord
       options = {
         stream: false, symbolize_keys: true, cache_rows: false, as: :hash,
         database_timezone: ActiveRecord::Base.default_timezone
-      }
-      result = _light_record_execute_query(connection, sql, options)
+      }.merge(options)
+
+      result = _light_record_execute_query(connection, sql, options.except(:set_const))
 
       klass = LightRecord.build_for_class(self.klass, result.fields)
 
@@ -210,8 +211,9 @@ module LightRecord
       options = {
         stream: true, symbolize_keys: true, cache_rows: false, as: :hash,
         database_timezone: ActiveRecord::Base.default_timezone
-      }
-      result = _light_record_execute_query(conn, sql, options)
+      }.merge(options)
+
+      result = _light_record_execute_query(conn, sql, options.except(:set_const))
 
       klass = LightRecord.build_for_class(self.klass, result.fields)
 
@@ -219,21 +221,44 @@ module LightRecord
         self.klass.const_set(:"LR_#{Time.now.to_i}", klass)
       end
 
-      need_symbolize_keys = defined?(PG::Result) && result.is_a?(PG::Result)
-
-      result.each do |row|
-        row.symbolize_keys! if need_symbolize_keys
-        yield klass.new(row)
+      if defined?(PG::Result) && result.is_a?(PG::Result)
+        begin
+          result.stream_each do |row|
+            row.symbolize_keys!
+            yield klass.new(row)
+          end
+        rescue => error
+          conn.raw_connection.get_last_result
+          throw error
+        ensure
+          result.clear
+        end
+      else
+        result.each do |row|
+          yield klass.new(row)
+        end
       end
     ensure
       ActiveRecord::Base.connection_pool.checkin(conn)
     end
 
     private def _light_record_execute_query(connection, sql, options)
-      client = connection.instance_variable_get(:@connection)
+      client = connection.raw_connection
 
       if client.class.to_s == 'PG::Connection'
-        connection.execute(sql, "LightRecord - #{self.klass}")
+        if options[:stream]
+          connection.send(:log, sql, "LightRecord - #{self.klass}") do
+            ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+              client.send_query(sql)
+              client.set_single_row_mode
+              result = client.get_result
+              result.check
+              result
+            end
+          end
+        else
+          connection.execute(sql, "LightRecord - #{self.klass}")
+        end
       else
         connection.send(:log, sql, "LightRecord - #{self.klass}") do
           client.query(sql, options)

@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
 gemspec
 
 gem 'activerecord', '>= 5.0'
@@ -7,6 +9,8 @@ gem 'mysql2', '~> 0.4'
 gem 'pg'
 
 gem 'benchmark-ips'
+gem 'benchmark-memory'
+
 #gem 'stackprof'
 gem 'flamegraph'
 gem 'memory_profiler'
