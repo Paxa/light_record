@@ -103,8 +103,7 @@ module LightRecord
 
       private
         def write_attribute_without_type_cast(attr_name, value)
-          name = attr_name.to_sym
-          @attributes[name] = value
+          @attributes[attr_name.to_sym] = value
         end
     end
 
@@ -131,7 +130,7 @@ module LightRecord
       @fields ||= []
 
       fields.each do |field|
-        field = field.to_sym unless field.is_a?(Symbol)
+        field = field.to_sym
         @fields << field
         define_method(field) do
           @attributes[field]
@@ -144,7 +143,7 @@ module LightRecord
       end
 
       # ActiveRecord make method :id refers to primary key, even there is no column "id"
-      if !fields.include?(:id) && !fields.include?("id") && primary_key.present?
+      if !@fields.include?(:id) && primary_key.present?
         define_method(:id) do
           @attributes[self.class.primary_key.to_sym]
         end
@@ -157,7 +156,7 @@ module LightRecord
 
     # Active record keep it as strings, but I keep it as symbols
     def column_names
-      @fields.map(&:to_s)
+      @column_names ||= @fields.map(&:to_s)
     end
   end
 
