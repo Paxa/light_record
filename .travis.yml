@@ -15,6 +15,7 @@ env:
 before_script:
   - mysql -u root -e 'create database IF NOT EXISTS light_record;'
   - psql -c 'create database light_record;' -U postgres
+  - rvm @default,@global do gem uninstall bundler --all
   - gem install bundler -v '2.0.1'
 
 script:
