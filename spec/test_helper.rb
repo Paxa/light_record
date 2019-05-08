@@ -15,3 +15,5 @@ require 'light_record'
 require 'looksee'
 
 require "minitest/autorun"
+
+# ActiveRecord::Base.logger = Logger.new(STDOUT)

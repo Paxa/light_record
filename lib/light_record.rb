@@ -101,9 +101,22 @@ module LightRecord
         attributes[self.class.primary_key.to_sym]
       end
 
+      def reload
+        super
+        @attributes = @attributes.to_h.symbolize_keys
+
+        self
+      end
+
       private
         def write_attribute_without_type_cast(attr_name, value)
           @attributes[attr_name.to_sym] = value
+        end
+
+        def clear_aggregation_cache
+          if defined?(@aggregation_cache) && @aggregation_cache
+            super
+          end
         end
     end
 

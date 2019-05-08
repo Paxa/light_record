@@ -140,4 +140,15 @@ describe "LightRecord" do
     record = ARQuestion.where(policy_id: 119736).light_records.first
     assert_equal(ARQuestion.model_name, record.class.model_name)
   end
+
+  it "should reload record" do
+    record = ARQuestion.offset(3).limit(1).light_records.first
+
+    new_granularity = Time.now.to_i
+    ARQuestion.find_by(policy_id: record.policy_id).update_columns(point_granularity: new_granularity)
+
+    refute_equal(record.point_granularity, new_granularity)
+    record.reload
+    assert_equal(record.point_granularity, new_granularity)
+  end
 end
