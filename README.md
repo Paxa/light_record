@@ -10,7 +10,7 @@ ActiveRecord extension to kick the speed of allocating ActiveRecord object
 It provides functionality to load ActiveRecord records with patched attribute related methods.
 This make AR objects as read-only but it makes up to 5 times less object allocations.
 
-Each time when you retrieve objects via `.light_records` it will create annonymous class to work with given set of attributes.
+Each time when you retrieve objects via `.light_records` it will create anonymous class to work with given set of attributes.
 
 ```
   LightRecord Extension Class
@@ -55,7 +55,7 @@ end
 #### `scope.light_records_each`
 
 
-Other method: `.light_records_each`, it will utilize `stream: true` feature from mysql2 client. So it will initialize objects one by one for every interation:
+Other method: `.light_records_each`, it will utilize `stream: true` feature from mysql2 client. So it will initialize objects one by one for every interaction:
 
 ```ruby
 User.limit(1_000_000).light_records_each do |user|
@@ -65,7 +65,7 @@ end
 
 This allow you to interate big amount of data without using `find_each` or `find_in_batches` because with `light_records_each` it will use very low memory. Or allow you to use `find_in_batches` with bigger batch size
 
-\* Please note that time will be as a ruby [Time](http://ruby-doc.org/core-2.3.0/Time.html) object, instead of [TimeWithZone](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html). To make it in correct timezone you can call it as:
+\* Please note that time will be as a ruby [Time](http://ruby-doc.org/core-2.3.0/Time.html) object, instead of [TimeWithZone](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html). To make it in correct time zone you can call it as:
 
 ```ruby
 record.created_at.in_time_zone(Time.zone)
