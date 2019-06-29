@@ -34,7 +34,7 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     looksee (4.1.0)
-    memory_profiler (0.9.13)
+    memory_profiler (0.9.14)
     minitest (5.11.3)
     minitest-reporters (1.3.6)
       ansi
