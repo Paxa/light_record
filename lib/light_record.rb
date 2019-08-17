@@ -23,6 +23,7 @@ module LightRecord
         @attributes = data
         @readonly = true
         @association_cache = {}
+        @primary_key = self.class::LIGHT_RECORD_PRIMARY_KEY_CACHE
         #init_internals
       end
 
@@ -62,7 +63,7 @@ module LightRecord
       def remember_transaction_record_state
         @new_record ||= false
         @destroyed ||= false
-        @_start_transaction_state ||= {}
+        @_start_transaction_state ||= {level: 0}
         super
       end
 
@@ -119,6 +120,9 @@ module LightRecord
           end
         end
     end
+
+    # for rails 6
+    new_klass.const_set(:LIGHT_RECORD_PRIMARY_KEY_CACHE, klass.primary_key)
 
     if klass.const_defined?(:LightRecord, false)
       new_klass.send(:prepend, klass::LightRecord)

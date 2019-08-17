@@ -107,7 +107,7 @@ describe "LightRecord" do
     assert(record.readonly?)
 
     assert_raises(ActiveRecord::ReadOnlyRecord) do
-      record.update_attributes(ARQuestion.column_names.first => "bla bla lba")
+      record.update(ARQuestion.column_names.first => "bla bla lba")
     end
   end
 

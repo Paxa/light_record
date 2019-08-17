@@ -28,7 +28,14 @@ describe "LightRecord attributes" do
     assert_equal(record[:statecode], "AAA")
   end
 
+  it "should have correct primary_key" do
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
+    record = ARQuestion.limit(10).light_records.first
+    assert_equal(record.class.primary_key, "policy_id")
+  end
+
   it "should allow updating attributes" do
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
     record = ARQuestion.limit(10).light_records.first
     ARQuestion.transaction do
       record.update_columns(statecode: "AAA")

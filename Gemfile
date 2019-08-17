@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gemspec
 
-gem 'activerecord', '>= 5.0'
+gem 'activerecord', '6.0.0'
 gem 'mysql2', '~> 0.4'
 gem 'pg'
 
