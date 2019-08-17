@@ -3,7 +3,7 @@
 
 Gem::Specification.new do |gem|
   gem.name = 'light_record'
-  gem.version = "0.3"
+  gem.version = "0.4"
   gem.authors = ["Pavel Evstigneev"]
   gem.email = ["pavel.evst@gmail.com"]
   gem.license = 'MIT'
