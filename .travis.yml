@@ -7,9 +7,18 @@ rvm:
   - 2.5.5
   - 2.6.3
 
+gemfile:
+  - Gemfile
+  - Gemfile.rails-5.2
+
 env:
   - DB=postgres DB_USER=postgres
   - DB=mysql
+
+matrix:
+  exclude:
+  - rvm: 2.4.6
+    gemfile: Gemfile
 
 before_script:
   - mysql -u root -e 'create database IF NOT EXISTS light_record;'
