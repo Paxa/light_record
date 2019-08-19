@@ -3,7 +3,6 @@ services:
   - postgresql
 
 rvm:
-  - 2.3.8
   - 2.4.6
   - 2.5.5
   - 2.6.3
@@ -16,7 +15,9 @@ before_script:
   - mysql -u root -e 'create database IF NOT EXISTS light_record;'
   - psql -c 'create database light_record;' -U postgres
   - rvm @default,@global do gem uninstall bundler --all
-  - gem install bundler -v '2.0.1'
+  - gem install bundler -v '2.0.2'
+  - gem list bundler
+  - bundle version
 
 script:
   - rake test
