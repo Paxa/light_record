@@ -57,8 +57,10 @@ jobs:
         run: bundle exec rake test
 
       - name: Create MySQL DB
-        run: mysql -u root -e 'create database IF NOT EXISTS light_record;' -h 127.0.0.1
+        run: mysql -u root -proot -e 'create database IF NOT EXISTS light_record;' -h 127.0.0.1
 
       - name: Test with MySQL
+        env:
+          DB_PASSWORD: root
         run: bundle exec rake test
 

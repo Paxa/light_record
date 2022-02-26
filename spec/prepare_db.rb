@@ -22,7 +22,7 @@ else
     database: 'light_record',
     host: 'localhost',
     username: 'root',
-    password: '',
+    password: ENV['DB_PASSWORD'] || '',
     pool: 5
   )
 end
