@@ -39,7 +39,7 @@ jobs:
           # bundler-cache: true
 
       - name: Install Deps
-        run: sudo apt-get update && dpkg --configure -a && sudo apt-get install -y mysql-client libmysqlclient-dev libpq-dev
+        run: sudo apt-get update && sudo dpkg --configure -a && sudo apt-get install -y mysql-client libmysqlclient-dev libpq-dev
 
       - run: bundle install
 
