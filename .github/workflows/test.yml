@@ -16,7 +16,8 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: root
-        ports: [3306]
+        ports:
+          - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
       postgres:
         image: postgres
@@ -28,7 +29,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports: [5432]
+        ports:
+          - 5432:5432
 
     runs-on: ${{ matrix.os }}
     env:
