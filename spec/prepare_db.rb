@@ -1,11 +1,14 @@
 require "mysql2"
 require "active_record"
 
+require 'active_record/connection_adapters/mysql2_adapter'
+require 'active_record/connection_adapters/postgresql_adapter'
+
 if ENV['DB'] == 'postgres'
   ActiveRecord::Base.establish_connection(
     url: "postgresql://#{ENV['DB_USER'] || ENV["USER"]}@127.0.0.1:5432/light_record",
     # host: '127.0.0.1',
-    # adapter: 'postgresql',
+    adapter: 'postgresql',
     # encoding: 'unicode',
     # database: 'light_record',
     # username: ENV['DB_USER'] || ENV["USER"],
@@ -23,9 +26,6 @@ else
     pool: 5
   )
 end
-
-require 'active_record/connection_adapters/mysql2_adapter'
-require 'active_record/connection_adapters/postgresql_adapter'
 
 module TestDB
 
