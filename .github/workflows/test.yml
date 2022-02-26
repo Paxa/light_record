@@ -46,7 +46,7 @@ jobs:
       - run: bundle install
 
       - name: Create PostgreSQL DB
-        run: psql -c 'create database light_record;' -U postgres
+        run: psql -c 'create database light_record;' -U postgres -h 127.0.0.1
 
       - name: Test with PostgreSQL
         env:
