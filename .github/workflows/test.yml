@@ -38,16 +38,10 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           # bundler-cache: true
 
-      - name: Install Deps
-        run: sudo apt-get update && sudo dpkg --configure -a && sudo apt-get install -y mysql-client libmysqlclient-dev libpq-dev
+      # - name: Install Deps
+      #   run: sudo apt-get update && sudo dpkg --configure -a && sudo apt-get install -y mysql-client libmysqlclient-dev libpq-dev
 
       - run: bundle install
-
-      - name: Create MySQL DB
-        run: mysql -u root -e 'create database IF NOT EXISTS light_record;'
-
-      - name: Test with MySQL
-        run: bundle exec rake test
 
       - name: Create PostgreSQL DB
         run: psql -c 'create database light_record;' -U postgres
@@ -57,3 +51,10 @@ jobs:
           DB: postgres
           DB_USER: postgres
         run: bundle exec rake test
+
+      - name: Create MySQL DB
+        run: mysql -u root -e 'create database IF NOT EXISTS light_record;'
+
+      - name: Test with MySQL
+        run: bundle exec rake test
+
