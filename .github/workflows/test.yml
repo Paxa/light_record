@@ -28,8 +28,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          - 5432:5432
+        ports: [5432]
 
     runs-on: ${{ matrix.os }}
     env:
@@ -56,7 +55,7 @@ jobs:
         run: bundle exec rake test
 
       - name: Create MySQL DB
-        run: mysql -u root -e 'create database IF NOT EXISTS light_record;'
+        run: mysql -u root -e 'create database IF NOT EXISTS light_record;' -h 127.0.0.1
 
       - name: Test with MySQL
         run: bundle exec rake test
