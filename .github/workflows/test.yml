@@ -11,6 +11,23 @@ jobs:
         ruby: [2.7, '3.0', 3.1]
         gemfile: [ Gemfile, Gemfile.rails-5, Gemfile.rails-6 ]
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports: [3306]
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     runs-on: ${{ matrix.os }}
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
@@ -21,5 +38,22 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           # bundler-cache: true
 
+      - name: Install Deps
+        run: sudo apt-get install -y mysql-client libmysqlclient-dev libpq-dev
+
       - run: bundle install
-      - run: bundle exec rake test
+
+      - name: Create MySQL DB
+        run: mysql -u root -e 'create database IF NOT EXISTS light_record;'
+
+      - name: Test with MySQL
+        run: bundle exec rake test
+
+      - name: Create PostgreSQL DB
+        run: psql -c 'create database light_record;' -U postgres
+
+      - name: Test with PostgreSQL
+        env:
+          DB: postgres
+          DB_USER: postgres
+        run: bundle exec rake test
