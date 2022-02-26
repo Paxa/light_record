@@ -3,13 +3,14 @@ require "active_record"
 
 if ENV['DB'] == 'postgres'
   ActiveRecord::Base.establish_connection(
-    host: '127.0.0.1',
-    adapter: 'postgresql',
-    encoding: 'unicode',
-    database: 'light_record',
+    url: "postgresql://#{ENV['DB_USER'] || ENV["USER"]}@127.0.0.1:5432/light_record",
+    # host: '127.0.0.1',
+    # adapter: 'postgresql',
+    # encoding: 'unicode',
+    # database: 'light_record',
+    # username: ENV['DB_USER'] || ENV["USER"],
+    # password: '',
     pool: 5,
-    username: ENV['DB_USER'] || ENV["USER"],
-    password: '',
     reconnect: true
   )
 else

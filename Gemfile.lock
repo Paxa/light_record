@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    light_record (0.4)
+    light_record (0.5)
 
 GEM
   remote: https://rubygems.org/
