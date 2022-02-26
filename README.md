@@ -3,7 +3,12 @@ LightRecord
 
 [![Build Status](https://travis-ci.org/Paxa/light_record.svg?branch=master)](https://travis-ci.org/Paxa/light_record)
 
-ActiveRecord extension to kick the speed of allocating ActiveRecord object
+ActiveRecord extension to kick the speed of allocating ActiveRecord object, and it allows fetching DB rows sequentially to reduce memory usage
+
+**Supports:** Rails 5, 6 and 7
+
+**Note:** it overrides some internal methods of active record, and in some rare cases it not work correctly,
+please test it well in your project before using it in production
 
 ### How it works
 
@@ -65,7 +70,7 @@ end
 
 This allow you to interate big amount of data without using `find_each` or `find_in_batches` because with `light_records_each` it will use very low memory. Or allow you to use `find_in_batches` with bigger batch size
 
-\* Please note that time will be as a ruby [Time](http://ruby-doc.org/core-2.3.0/Time.html) object, instead of [TimeWithZone](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html). To make it in correct time zone you can call it as:
+\* Please note that time will be as a ruby [Time](https://ruby-doc.org/core-3.1.0/Time.html) object, instead of [TimeWithZone](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html). To make it in correct time zone you can call it as:
 
 ```ruby
 record.created_at.in_time_zone(Time.zone)
@@ -108,5 +113,6 @@ end
 ```
 
 Note: when you use LightRecord instances it will break type casting
+
 
 This gem supports MySQL and PostgreSQL

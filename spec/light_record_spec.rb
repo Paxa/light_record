@@ -87,6 +87,7 @@ describe "LightRecord" do
     rand_sql_fn = ENV['DB'] == 'postgres' ? "random" : "rand"
     light = ARQuestion.select("*, #{rand_sql_fn}() as extra_column_from_sql").limit(1).light_records.first
 
+    refute_nil(light.extra_column_from_sql)
     assert_respond_to(light, :extra_column_from_sql)
     ARQuestion.column_names.each do |column_name|
       assert_respond_to(light, column_name)

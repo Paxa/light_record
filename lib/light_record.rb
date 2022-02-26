@@ -102,6 +102,33 @@ module LightRecord
         attributes[self.class.primary_key.to_sym]
       end
 
+      # For Rails >= 6.0
+      if ActiveRecord.version >= Gem::Version.new("6.0.0")
+        def restore_transaction_record_state(force_restore_state = false)
+          # nothing
+        end
+
+        def _has_attribute?(attr_name)
+          has_attribute?(attr_name)
+        end
+      end
+
+      # For Rails >= 7.0
+      if ActiveRecord.version >= Gem::Version.new("7.0.0")
+        def update_columns(attributes)
+          unless @attributes.respond_to?(:write_cast_value)
+            @attributes.define_singleton_method(:write_cast_value) do |k, v|
+              self[k.to_sym] = v
+            end
+          end
+          super
+        end
+
+        def clear_attribute_change(k)
+          # nothing
+        end
+      end
+
       def reload
         super
         @attributes = @attributes.to_h.symbolize_keys

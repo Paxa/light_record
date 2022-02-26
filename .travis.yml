@@ -3,28 +3,24 @@ services:
   - postgresql
 
 rvm:
-  - 2.4.6
-  - 2.5.5
-  - 2.6.3
+  - 2.7.5
+  - 3.0.3
+  - 3.1.1
 
 gemfile:
   - Gemfile
+  - Gemfile.rails-6
   - Gemfile.rails-5.2
 
 env:
   - DB=postgres DB_USER=postgres
   - DB=mysql
 
-matrix:
-  exclude:
-  - rvm: 2.4.6
-    gemfile: Gemfile
-
 before_script:
   - mysql -u root -e 'create database IF NOT EXISTS light_record;'
   - psql -c 'create database light_record;' -U postgres
   - rvm @default,@global do gem uninstall bundler --all --executables
-  - gem install bundler -v '2.0.2'
+  - gem install bundler -v '2.3.8'
   - gem list bundler
   - bundle version
 
