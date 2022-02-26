@@ -62,5 +62,6 @@ jobs:
       - name: Test with MySQL
         env:
           DB_PASSWORD: root
+          DB_HOST: localhost
         run: bundle exec rake test
 

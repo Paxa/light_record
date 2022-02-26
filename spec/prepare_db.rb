@@ -20,7 +20,7 @@ else
   ActiveRecord::Base.establish_connection(
     adapter: 'mysql2',
     database: 'light_record',
-    host: 'localhost',
+    host: ENV['DB_HOST'] || 'localhost',
     username: 'root',
     password: ENV['DB_PASSWORD'] || '',
     pool: 5
