@@ -7,21 +7,28 @@ require 'active_record/connection_adapters/postgresql_adapter'
 DB_TYPE = ENV['DB'] == 'postgres' || ENV['DATABASE_URL'].to_s.start_with?("postgresql://") ? 'postgres' : 'mysql'
 
 if DB_TYPE == 'postgres'
-  ActiveRecord::Base.establish_connection(
-    adapter: 'postgresql',
-    url: ENV['DATABASE_URL'] || "postgresql://#{ENV["USER"]}@localhost/light_record",
-    pool: 5,
-    reconnect: true
-  )
+  connection_url = ENV['DATABASE_URL'] || "postgresql://#{ENV["USER"]}@localhost/light_record"
+  if ActiveRecord.version < Gem::Version.new("6.0.0")
+    ActiveRecord::Base.establish_connection(connection_url)
+  else
+    ActiveRecord::Base.establish_connection(
+      adapter: 'postgresql',
+      url: connection_url,
+      pool: 5
+    )
+  end
 else
-  ActiveRecord::Base.establish_connection(
-    adapter: 'mysql2',
-    url: ENV['DATABASE_URL'] || "mysql2://root@127.0.0.1/light_record",
-    pool: 5,
-    reconnect: true
-  )
+  connection_url = ENV['DATABASE_URL'] || "mysql2://root@127.0.0.1/light_record"
+  if ActiveRecord.version < Gem::Version.new("6.0.0")
+    ActiveRecord::Base.establish_connection(connection_url)
+  else
+    ActiveRecord::Base.establish_connection(
+      adapter: 'mysql2',
+      url: connection_url,
+      pool: 5
+    )
+  end
 end
-
 
 module TestDB
 
