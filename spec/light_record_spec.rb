@@ -84,7 +84,7 @@ describe "LightRecord" do
   end
 
   it "should work with #respond_to?" do
-    rand_sql_fn = ENV['DB'] == 'postgres' ? "random" : "rand"
+    rand_sql_fn = DB_TYPE == 'postgres' ? "random" : "rand"
     light = ARQuestion.select("*, #{rand_sql_fn}() as extra_column_from_sql").limit(1).light_records.first
 
     refute_nil(light.extra_column_from_sql)

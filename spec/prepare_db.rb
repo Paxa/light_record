@@ -4,7 +4,9 @@ require "active_record"
 require 'active_record/connection_adapters/mysql2_adapter'
 require 'active_record/connection_adapters/postgresql_adapter'
 
-if ENV['DB'] == 'postgres' || ENV['DATABASE_URL'].to_s.start_with?("postgresql://")
+DB_TYPE = ENV['DB'] == 'postgres' || ENV['DATABASE_URL'].to_s.start_with?("postgresql://") ? 'postgres' : 'mysql'
+
+if DB_TYPE == 'postgres'
   ActiveRecord::Base.establish_connection(
     adapter: 'postgresql',
     url: ENV['DATABASE_URL'] || "postgresql://#{ENV["USER"]}@localhost/light_record",
@@ -20,6 +22,7 @@ else
   )
 end
 
+
 module TestDB
 
   SAMPLE_TABLE = 'sample'
@@ -32,7 +35,7 @@ module TestDB
       return
     end
 
-    if db.is_a? ActiveRecord::ConnectionAdapters::Mysql2Adapter
+    if db.is_a?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
       db.execute(%{
         CREATE TABLE `#{SAMPLE_TABLE}` (
           `policy_id` int(11) NOT NULL,
@@ -56,7 +59,7 @@ module TestDB
           PRIMARY KEY (`policy_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
       })
-    elsif db.is_a? ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
+    elsif db.is_a?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
       db.execute(%{
         CREATE TABLE #{SAMPLE_TABLE} (
           policy_id integer NULL,
