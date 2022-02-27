@@ -4,26 +4,19 @@ require "active_record"
 require 'active_record/connection_adapters/mysql2_adapter'
 require 'active_record/connection_adapters/postgresql_adapter'
 
-if ENV['DB'] == 'postgres'
+if ENV['DB'] == 'postgres' || ENV['DATABASE_URL'].to_s.start_with?("postgresql://")
   ActiveRecord::Base.establish_connection(
-    url: "postgresql://#{ENV['DB_USER'] || ENV["USER"]}@127.0.0.1:5432/light_record",
-    # host: '127.0.0.1',
     adapter: 'postgresql',
-    # encoding: 'unicode',
-    # database: 'light_record',
-    # username: ENV['DB_USER'] || ENV["USER"],
-    # password: '',
+    url: ENV['DATABASE_URL'] || "postgresql://#{ENV["USER"]}@localhost/light_record",
     pool: 5,
     reconnect: true
   )
 else
   ActiveRecord::Base.establish_connection(
     adapter: 'mysql2',
-    database: 'light_record',
-    host: ENV['DB_HOST'] || 'localhost',
-    username: 'root',
-    password: ENV['DB_PASSWORD'] || '',
-    pool: 5
+    url: ENV['DATABASE_URL'] || "mysql2://root@127.0.0.1/light_record",
+    pool: 5,
+    reconnect: true
   )
 end
 

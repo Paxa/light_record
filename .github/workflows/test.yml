@@ -10,6 +10,11 @@ jobs:
         os: [ubuntu-latest]
         ruby: [2.7, '3.0', 3.1]
         gemfile: [ Gemfile, Gemfile.rails-5, Gemfile.rails-6 ]
+        exclude:
+          - gemfile: Gemfile.rails-5
+            ruby: '3.0'
+          - gemfile: Gemfile.rails-5
+            ruby: '3.1'
 
     services:
       mysql:
@@ -52,8 +57,7 @@ jobs:
 
       - name: Test with PostgreSQL
         env:
-          DB: postgres
-          DB_USER: postgres
+          DATABASE_URL: postgresql://postgres@127.0.0.1/light_record
         run: bundle exec rake test
 
       - name: Create MySQL DB
@@ -61,7 +65,6 @@ jobs:
 
       - name: Test with MySQL
         env:
-          DB_PASSWORD: root
-          DB_HOST: 127.0.0.1
+          DATABASE_URL: mysql2://root:root@127.0.0.1/light_record
         run: bundle exec rake test
 

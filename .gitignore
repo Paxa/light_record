@@ -2,5 +2,6 @@ light_record-*.gem
 *-*.csv
 mesure_lr_old.rb
 .ruby-version
-Gemfile.rails-5.2.lock
+Gemfile.rails-5.lock
 Gemfile.rails-6.lock
+Gemfile.lock
