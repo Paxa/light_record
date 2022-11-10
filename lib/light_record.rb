@@ -222,7 +222,11 @@ module LightRecord
 
       options = {
         stream: false, symbolize_keys: true, cache_rows: false, as: :hash,
-        database_timezone: ActiveRecord::Base.default_timezone
+        database_timezone: (
+          ActiveRecord.respond_to?(:default_timezone) ?
+          ActiveRecord.default_timezone :
+          ActiveRecord::Base.default_timezone
+        )
       }.merge(options)
 
       result = _light_record_execute_query(connection, sql, options.except(:set_const))
@@ -253,7 +257,11 @@ module LightRecord
 
       options = {
         stream: true, symbolize_keys: true, cache_rows: false, as: :hash,
-        database_timezone: ActiveRecord::Base.default_timezone
+        database_timezone: (
+          ActiveRecord.respond_to?(:default_timezone) ?
+          ActiveRecord.default_timezone :
+          ActiveRecord::Base.default_timezone
+        )
       }.merge(options)
 
       result = _light_record_execute_query(conn, sql, options.except(:set_const))
